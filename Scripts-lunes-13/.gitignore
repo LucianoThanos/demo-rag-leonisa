@@ -5,7 +5,6 @@ npm-debug.log
 # Archivos de Entorno (¡Acá protegemos tus llaves!)
 .env
 .env.local
-.env.*
 *.env
 
 # Archivos de Sistema (Opcional pero recomendado)
