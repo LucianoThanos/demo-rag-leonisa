@@ -35,33 +35,32 @@ export async function POST(req: Request) {
                 .join("\n\n---\n\n"); // Separa cada documento con una línea para que GPT los lea ordenados
         }   
         //PASO 3: Agente RAG - Le pasamos a GPT el contexto y la pregunta
-        const completion = await openai.chat.completions.create({
-            model: "gpt-4o", // se puede usar gpt-3.5-turbo si querés que sea más rápido/barato
-            messages: [
-                {
-                    role: "system",
-                    content: `Sos un asistente virtual inteligente. Respondé la pregunta del usuario basándote ÚNICAMENTE en la siguiente información de contexto proporcionada. Si la respuesta no se encuentra en el contexto, indicá amablemente que no tenés esa información.\n\nCONTEXTO:\n${contexto}`
-                },
-                {   role: "user", 
-                    content: message 
-                }
-            ]
+        // const completion = await openai.chat.completions.create({
+        //     model: "gpt-4o", // se puede usar gpt-3.5-turbo si querés que sea más rápido/barato
+        //     messages: [
+        //         {
+        //             role: "system",
+        //             content: `Sos un asistente virtual inteligente. Respondé la pregunta del usuario basándote ÚNICAMENTE en la siguiente información de contexto proporcionada. Si la respuesta no se encuentra en el contexto, indicá amablemente que no tenés esa información.\n\nCONTEXTO:\n${contexto}`
+        //         },
+        //         {   role: "user", 
+        //             content: message 
+        //         }
+        //     ]
+        // });
+        
+        // return NextResponse.json({ respuesta: completion.choices[0].message.content });
+
+        const responseLocal = await fetch('http://localhost:11434/api/generate', {
+            method: 'POST',
+            body: JSON.stringify({
+            model: 'qwen2.5:7b',
+                prompt: `Contexto: ${contexto}. Pregunta: ${message}`,
+                stream: false
+            })
         });
 
-          // Devolvemos la respuesta al Front-end
-        return NextResponse.json({ respuesta: completion.choices[0].message.content });
-
-        // const responseLocal = await fetch('http://localhost:11434/api/generate', {
-        //     method: 'POST',
-        //     body: JSON.stringify({
-        //     model: 'qwen2.5:7b',
-        //         prompt: `Contexto: ${contexto}. Pregunta: ${message}`,
-        //         stream: false
-        //     })
-        // });
-
-        // const dataOllama = await responseLocal.json();
-        // return NextResponse.json({ respuesta: dataOllama.response });
+        const dataOllama = await responseLocal.json();
+        return NextResponse.json({ respuesta: dataOllama.response });
 
 
     } catch (error) {

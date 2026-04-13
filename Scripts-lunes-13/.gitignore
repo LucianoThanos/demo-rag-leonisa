@@ -1,0 +1,18 @@
+# Dependencias de Node
+node_modules/
+npm-debug.log
+
+# Archivos de Entorno (¡Acá protegemos tus llaves!)
+.env
+.env.local
+.env.*
+*.env
+
+# Archivos de Sistema (Opcional pero recomendado)
+.DS_Store
+Thumbs.db
+
+# Logs y reportes
+logs
+*.log
+npm-debug.log*
